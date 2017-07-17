@@ -18,6 +18,13 @@ class Igniter implements IgniterInterface
         $this->methods = get_class_methods($this);
     }
 
+    /**
+     * Reflecting methods to an ordered array
+     *
+     * @param $methodName
+     * @param $arguments
+     * @return $this|array
+     */
     public function __call($methodName, $arguments)
     {
         if (!in_array($methodName, $this->methods)) {
@@ -41,10 +48,11 @@ class Igniter implements IgniterInterface
      */
     public function processQuery(array $processList = [])
     {
-        $process = new \AParse\Process();
+        $process = new \AParse\ProcessQuery();
+        $lineString = new LineString();
         //Reset process list
         $this->processList = [];
-        $engine = new Engine($this->fishPool, $process);
+        $engine = new Engine($this->fishPool, $process, $lineString);
         foreach ($processList as $value) {
             call_user_func([$engine, $value['methodName']], $value['arguments']);
         }

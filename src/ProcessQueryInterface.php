@@ -2,7 +2,7 @@
 
 namespace AParse;
 
-interface ProcessInterface
+interface ProcessQueryInterface
 {
     /**
      * Select specific fields in a row.

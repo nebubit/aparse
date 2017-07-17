@@ -2,14 +2,14 @@
 
 namespace AParse;
 
-class Process implements ProcessInterface
+class ProcessQuery implements ProcessQueryInterface
 {
     private $aggregationCountNumber = [];
 
     public static function getValuesByColumnNames(array $row, array $columnNames)
     {
         $keys = array_map(function ($v) {
-            if( (ctype_alpha(substr($v, 0,1)) && is_numeric(substr($v, 1,1))) ){
+            if ((ctype_alpha(substr($v, 0, 1)) && is_numeric(substr($v, 1, 1)))) {
                 return substr($v, 1);
             }
 
@@ -72,11 +72,16 @@ class Process implements ProcessInterface
         return $check;
     }
 
+    /**
+     * Count
+     *
+     * @param array $row
+     * @param $fieldForCount
+     * @return array
+     */
     public function count(array $row, $fieldForCount)
     {
-        // Count all
         if ($fieldForCount == '*') {
-
             if (!isset($this->aggregationCountNumber['*'])) {
                 $this->aggregationCountNumber['*'] = 0;
             }

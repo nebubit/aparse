@@ -4,7 +4,7 @@ namespace AParse;
 
 use AParse\Exceptions\InvalidArgumentException;
 
-class Engine implements StringInterface, EngineInterface
+class Engine implements EngineInterface
 {
     private $fishPool;
     private $selectedFields;
@@ -13,6 +13,7 @@ class Engine implements StringInterface, EngineInterface
     private $fieldForCount;
     private $fieldForGroupBy;
     private $process;
+    private $lineString;
 
     // The total of valid items that will be returned in result
     private $currentItemCount;
@@ -20,23 +21,11 @@ class Engine implements StringInterface, EngineInterface
     // The result of the query
     private $result;
 
-    public function __construct($fishPool, ProcessInterface $process)
+    public function __construct($fishPool, ProcessQueryInterface $process, LineString $lineString)
     {
         $this->fishPool = $fishPool;
         $this->process = $process;
-    }
-
-    public function parseAccessLogLineToArray($lineString)
-    {
-        $temp = explode(' - - ', $lineString);
-        if (count($temp) < 2) {
-            return [];
-        }
-        $parsedLine[] = $temp[0];
-
-        $otherStrings = $this->cutToPieces($temp[1]);
-
-        return array_merge($parsedLine, $otherStrings);
+        $this->lineString = $lineString;
     }
 
     public function select(array $fields)
@@ -96,6 +85,17 @@ class Engine implements StringInterface, EngineInterface
         return $this;
     }
 
+    /**
+     * The same as groupBy
+     *
+     * @param null $field
+     * @return Engine
+     */
+    public function group($field = null)
+    {
+        return $this->groupBy($field);
+    }
+
     public function get($limit = null)
     {
         if (is_array($limit) && !empty($limit)) {
@@ -104,50 +104,6 @@ class Engine implements StringInterface, EngineInterface
 
         $this->limit = (int)$limit;
         $this->scanFile();
-    }
-
-    public function cutToPieces($string)
-    {
-        $string = trim($string);
-        $result = [];
-
-        if ($string == '') {
-            return $result;
-        }
-
-        $separators = [
-            ['[', ']'],
-            ['"', '"'],
-        ];
-
-        $beginningChar = substr($string, 0, 1);
-
-        $hit = false;
-        foreach ($separators as $key => $value) {
-            if ($beginningChar == $value[0]) {
-                $hit = true;
-
-                $remainedPart = substr($string, 1);
-                $endPos = strpos($remainedPart, $value[1]);
-                $result[] = substr($string, 1, $endPos);
-                $remainedPart = substr($remainedPart, $endPos + 1);
-                $otherStrings = $this->cutToPieces($remainedPart);
-                $result = array_merge($result, $otherStrings);
-            }
-        }
-
-        if (!$hit) {
-            foreach ($separators as $key => $value) {
-                $endPos = strpos($string, $value[0]);
-                if ($endPos !== false) {
-                    $firstPart = substr($string, 0, $endPos - 1);
-                    $result = explode(' ', $firstPart);
-                    $otherStrings = $this->cutToPieces(substr($string, $endPos));
-                    $result = array_merge($result, $otherStrings);
-                }
-            }
-        }
-        return $result;
     }
 
     public function processLine(array $row)
@@ -170,16 +126,35 @@ class Engine implements StringInterface, EngineInterface
         return $row;
     }
 
+    /**
+     * Get file type.
+     *
+     * @return string
+     */
+    public function getLogFileType($fileFullPath)
+    {
+        $fileType = pathinfo($fileFullPath, PATHINFO_EXTENSION);
+        switch (strtolower($fileType)) {
+            case 'csv':
+                return 'csv';
+            default:
+                return 'access';
+        }
+    }
+
     public function scanFile()
     {
-        $fileHandle = fopen($this->fishPool->currentFilePath, "r");
+        $fileFullPath = $this->fishPool->currentFilePath;
+        $fileType = $this->getLogFileType($fileFullPath);
+
+        $fileHandle = fopen($fileFullPath, "r");
         if (!$fileHandle) {
             throw new InvalidArgumentException('Open file failed');
         }
 
         while (!feof($fileHandle)) {
             $line = fgets($fileHandle);
-            $parsedLine = $this->parseAccessLogLineToArray($line);
+            $parsedLine = $this->lineString->parseLineToArray($line, $fileType);
             $lineQueryResult = $this->processLine($parsedLine);
             if (empty($lineQueryResult)) {
                 continue;
@@ -188,7 +163,7 @@ class Engine implements StringInterface, EngineInterface
             // For Group By
             if (!is_null($this->fieldForGroupBy)) {
                 $currentGroupKey =
-                    Process::getValuesByColumnNames($lineQueryResult, [$this->fieldForGroupBy]);
+                    ProcessQuery::getValuesByColumnNames($lineQueryResult, [$this->fieldForGroupBy]);
                 if (empty($currentGroupKey)) {
                     continue;
                 }

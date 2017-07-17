@@ -7,9 +7,9 @@ $fishPool->currentPath = getcwd();
 
 $variables = [
     'db' => new \AParse\Igniter($fishPool),
-    'useFile' => function($fileName){ return \AParse\useFile($fileName);},
 ];
 
 $shell = new \Psy\Shell(null);
 $shell->setScopeVariables($variables);
+$shell->add(new \AParse\Commands\UseFileCommand());
 $shell->run();

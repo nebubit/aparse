@@ -40,7 +40,7 @@ $db->select('c1', 'c2')->get(3)
 **Using GROUP BY and COUNT to get a aggregation result.**
 
 ```php
-$db->select('*')->count('c3')->groupBy('c3')->get(3)
+$db->select('*')->count('c3')->group('c3')->get(3)
 ```
 **Grouping result with filters.**
 ```php

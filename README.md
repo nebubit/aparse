@@ -8,7 +8,20 @@ A command line tool for PHP developers to analyze Apache log file.
 
 ## Installation
 
-composer global install "nebubit/aparse"
+```shell
+composer global require "nebubit/aparse=*"
+```
+Make sure you have the composer bin dir in your PATH. The default value is ~/.composer/vendor/bin/, but you can check the value that you need to use by running composer global config bin-dir --absolute. Then appending this path to your .bashrc by running following command.
+
+**For bash**
+```shell
+echo 'export PATH="$PATH:$HOME/.composer/vendor/bin"' >> ~/.bashrc
+```
+**For Z shell**
+```shell
+echo 'export PATH="$PATH:$HOME/.composer/vendor/bin"' >> ~/.zshrc
+```
+
 
 ## Steps for Query
 * Select a file.

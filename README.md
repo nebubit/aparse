@@ -1,7 +1,7 @@
 # AParse
 
 ## About AParse
-A command line tool for PHP developers to analyze Apache log file.
+A command line tool for PHP developers to analyze Apache log file. You may ask We already have sed, awk and the others. Why did you still make this tool? The syntax of those tools are too unreadable. A lot of time will be spent on reading the reference to achieve a very simple aim, such as counting the status code. 
 
 ## Requirements
 * PHP version 5.4.0 or greater
@@ -37,12 +37,12 @@ $db->select('c1', 'c2')->get(3)
 ```
 
 ## Examples
-**Using GROUP BY and COUNT to get a aggregation result.**
+**Using GROUP BY and COUNT to get an aggregation result.**
 
 ```php
 $db->select('*')->count('c3')->group('c3')->get(3)
 ```
-**Grouping result with filters.**
+**Grouping result with WHERE conditions.**
 ```php
 $db->select('c1', 'c2')->count('c3')->where(['c3'=>'400'])->group('c3')->get(3)
 ```

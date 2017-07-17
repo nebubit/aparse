@@ -10,7 +10,18 @@ interface EngineInterface
 
     public function count();
 
-    public function get($limit);
+    public function get($fields);
+
+    public function group($field = null);
 
     public function scanFile();
+
+    /**
+     * Get query result
+     *
+     * @return array
+     */
+    public function getResult();
+
+    public function filter();
 }

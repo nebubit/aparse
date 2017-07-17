@@ -3,7 +3,7 @@
     "description": "A command line tool for PHP developers to analyze Apache log file.",
     "type": "tool",
     "keywords": [
-        "aparse",
+        "parse",
         "console",
         "interactive",
         "shell",
@@ -29,8 +29,7 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Martin Tan",
-            "email": "martin.ver2000@gmail.com"
+            "name": "Martin Tan"
         }
     ]
 }

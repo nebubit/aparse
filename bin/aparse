@@ -14,11 +14,7 @@ unset($autoload);
 $fishPool = new \AParse\FishPool();
 $fishPool->currentPath = getcwd();
 
-$variables = [
-    'db' => new \AParse\Igniter($fishPool),
-];
-
 $shell = new \Psy\Shell(null);
-$shell->setScopeVariables($variables);
+$shell->setScopeVariables(['db' => new \AParse\Igniter($fishPool)]);
 $shell->add(new \AParse\Commands\UseFileCommand());
 $shell->run();

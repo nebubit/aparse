@@ -14,6 +14,7 @@ class Engine implements EngineInterface
     private $fieldForGroupBy;
     private $process;
     private $lineString;
+    private $offset;
 
     // The total of valid items that will be returned in result
     private $currentItemCount;
@@ -30,6 +31,10 @@ class Engine implements EngineInterface
 
     public function select(array $fields)
     {
+        if (isset($fields[0]) && is_array($fields[0])) {
+            $fields = $fields[0];
+        }
+
         $this->selectedFields = $fields;
 
         return $this;
@@ -96,20 +101,25 @@ class Engine implements EngineInterface
         return $this->groupBy($field);
     }
 
-    public function get($limit = null)
+    public function get($fields)
     {
-        if (is_array($limit) && !empty($limit)) {
-            $limit = $limit[0];
+        $limit = 1;
+        $offset = 0;
+        if (isset($fields[0])) {
+            $limit = $fields[0];
+        }
+        if (isset($fields[1])) {
+            $offset = $fields[1];
         }
 
         $this->limit = (int)$limit;
+        $this->offset = (int)$offset;
         $this->scanFile();
     }
 
     public function processLine(array $row)
     {
         //is aggregation query
-
         if (!empty($this->where)) {
             $check = $this->process->where($row, $this->where);
             if (!$check) {
@@ -172,19 +182,30 @@ class Engine implements EngineInterface
                 $this->currentItemCount++;
 
                 $currentGroupKey = array_values($currentGroupKey)[0];
-                $this->result[$currentGroupKey] = $lineQueryResult;
+
+                if ($this->currentItemCount > $this->offset) {
+                    $this->result[$currentGroupKey] = $lineQueryResult;
+                }
             } else {
                 // For limit
                 $this->currentItemCount++;
 
-                $this->result[] = $lineQueryResult;
+                if ($this->currentItemCount > $this->offset) {
+                    $this->result[] = $lineQueryResult;
+                }
 
-                if ($this->currentItemCount >= $this->limit) {
+                if ($this->currentItemCount >= ($this->limit + $this->offset)) {
                     break;
                 }
             }
         }
 
+        /**
+         * There is no break in the group-by part above, so array_slice is needed.
+         * This will also cause an issue that the group array may hit the memory limit.
+         * Adding a count function in group part will fix this issue but I don't think this is necessary.
+         * Because no one would like to make group on a long string column unless it's a mistake.
+         */
         if (!is_null($this->fieldForGroupBy)) {
             $this->result = array_slice($this->result, 0, $this->limit);
         }
@@ -192,8 +213,16 @@ class Engine implements EngineInterface
         fclose($fileHandle);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getResult()
     {
         return $this->result;
+    }
+
+    public function filter()
+    {
+        // TODO: Implement filter() method.
     }
 }

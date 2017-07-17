@@ -1,3 +1,7 @@
+## Notice
+
+THIS PROJECT IS NOT FINISHED. PLEASE NOT USE THIS TOOL.
+
 ## How to Install
 
 composer install "nebubit/aparse" --globally

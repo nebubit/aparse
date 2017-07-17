@@ -1,6 +1,14 @@
 {
     "name": "nebubit/aparse",
-    "type": "project",
+    "description": "A command line tool for PHP developers to analyze Apache log file.",
+    "type": "tool",
+    "keywords": [
+        "aparse",
+        "console",
+        "interactive",
+        "shell",
+        "apache access log analyzer"
+    ],
     "require": {
         "php": ">=5.4",
         "psy/psysh": "0.7.*|0.8.*"
@@ -9,9 +17,14 @@
         "phpunit/phpunit": "~4.4|~5.0",
         "squizlabs/php_codesniffer": "3.*"
     },
+    "bin": ["bin/aparse"],
     "autoload": {
-        "psr-4": {"AParse\\": "src/"},
-        "files": ["src/functions.php"]
+        "psr-4": {
+            "AParse\\": "src/"
+        },
+        "files": [
+            "src/functions.php"
+        ]
     },
     "license": "MIT",
     "authors": [

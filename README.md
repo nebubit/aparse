@@ -11,7 +11,7 @@ A command line tool for PHP developers to analyze Apache log file.
 ```shell
 composer global require "nebubit/aparse=*"
 ```
-Make sure you have the composer bin dir in your PATH. The default value is ~/.composer/vendor/bin/, but you can check the value that you need to use by running composer global config bin-dir --absolute. Then appending this path to your .bashrc by running following command.
+Make sure you have the composer bin dir in your PATH. The default value is ~/.composer/vendor/bin/, but you can check the value that you need to use by running composer global config bin-dir --absolute. Then appending this path to your shell environment file by running following command and restart your terminal.
 
 **For bash**
 ```shell

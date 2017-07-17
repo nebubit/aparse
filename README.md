@@ -1,16 +1,16 @@
-#AParse
+# AParse
 
-##About AParse
+## About AParse
 A command line tool for PHP developers to analyze Apache log file.
 
-##Requirements
+## Requirements
 * PHP version 5.4.0 or greater
 
-##Installation
+## Installation
 
 composer global install "nebubit/aparse"
 
-##Steps for Query
+## Steps for Query
 * Select a file.
 
 ```shell
@@ -23,7 +23,7 @@ use access-file-name.log
 $db->select('c1', 'c2')->get(3)
 ```
 
-##Examples
+## Examples
 **Using GROUP BY and COUNT to get a aggregation result.**
 
 ```php
@@ -34,7 +34,7 @@ $db->select('*')->count('c3')->groupBy('c3')->get(3)
 $db->select('c1', 'c2')->count('c3')->where(['c3'=>'400'])->group('c3')->get(3)
 ```
 
-##Terms
+## Terms
 
 The "c" in select fields stands for column.
 

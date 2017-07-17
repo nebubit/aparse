@@ -26,7 +26,7 @@ class Engine implements StringInterface, EngineInterface
         $this->process = $process;
     }
 
-    public function accessLogLineToArray($lineString)
+    public function parseAccessLogLineToArray($lineString)
     {
         $temp = explode(' - - ', $lineString);
         if (count($temp) < 2) {
@@ -89,8 +89,10 @@ class Engine implements StringInterface, EngineInterface
         }
 
         $this->fieldForGroupBy = $field[0];
-        if (!in_array($this->fieldForGroupBy, $this->selectedFields))
-        $this->selectedFields[] = $this->fieldForGroupBy;
+        if (!in_array($this->fieldForGroupBy, $this->selectedFields)) {
+            $this->selectedFields[] = $this->fieldForGroupBy;
+        }
+
         return $this;
     }
 
@@ -177,7 +179,7 @@ class Engine implements StringInterface, EngineInterface
 
         while (!feof($fileHandle)) {
             $line = fgets($fileHandle);
-            $parsedLine = $this->accessLogLineToArray($line);
+            $parsedLine = $this->parseAccessLogLineToArray($line);
             $lineQueryResult = $this->processLine($parsedLine);
             if (empty($lineQueryResult)) {
                 continue;

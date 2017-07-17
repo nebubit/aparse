@@ -4,5 +4,11 @@ namespace AParse;
 
 interface StringInterface
 {
-    public function accessLogLineToArray($lineString);
+    /**
+     * parse a line string of Apache access log
+     *
+     * @param string $lineString
+     * @return array line string to array
+     */
+    public function parseAccessLogLineToArray($lineString);
 }

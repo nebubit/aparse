@@ -7,12 +7,8 @@ class Igniter implements IgniterInterface
     private $fishPool;
     private $methods = [];
     private $processList = [];
-    public static $queryOrder =[
-        'select',
-        'where',
-    ];
 
-    public static $endingMethod = [
+    public static $endingMethods = [
         'get'
     ];
 
@@ -24,26 +20,32 @@ class Igniter implements IgniterInterface
 
     public function __call($methodName, $arguments)
     {
-        if (!in_array($methodName, $this->methods)){
+        if (!in_array($methodName, $this->methods)) {
             $this->processList[] = [
                 'methodName' => $methodName,
                 'arguments' => $arguments,
             ];
         }
-        
-        if (in_array($methodName, self::$endingMethod)){
+
+        if (in_array($methodName, self::$endingMethods)) {
             return $this->processQuery($this->processList);
         }
         return $this;
     }
 
+    /**
+     * Return the query result data.
+     *
+     * @param array $processList
+     * @return array
+     */
     public function processQuery(array $processList = [])
     {
         $process = new \AParse\Process();
         //Reset process list
         $this->processList = [];
         $engine = new Engine($this->fishPool, $process);
-        foreach ($processList as $value){
+        foreach ($processList as $value) {
             call_user_func([$engine, $value['methodName']], $value['arguments']);
         }
 

@@ -4,29 +4,23 @@ namespace AParse;
 
 class ProcessQuery implements ProcessQueryInterface
 {
-    private $aggregationCountNumber = [];
+    public $aggregationCountNumber = [];
 
     public static function getValuesByColumnNames(array $row, array $columnNames)
     {
-        $keys = array_map(function ($v) {
-            if ((ctype_alpha(substr($v, 0, 1)) && is_numeric(substr($v, 1, 1)))) {
-                return substr($v, 1);
-            }
+        $columnNames = array_flip($columnNames);
+        $columnValues = array_intersect_key($row, $columnNames);
 
-            return $v;
-        }, $columnNames);
-
-        $keys = array_flip($keys);
-
-        return array_intersect_key($row, $keys);
+        return $columnValues;
     }
 
     public function select(array $row, array $fields)
     {
-        if ($row == '') {
+        if (empty($row)) {
             return [];
         }
 
+        //TODO match * at any position in array
         if (trim($fields[0]) == '*') {
             return $row;
         }
@@ -46,6 +40,7 @@ class ProcessQuery implements ProcessQueryInterface
 
         foreach ($conditions as $value) {
             $check = false;
+
             $columnForCompare = self::getValuesByColumnNames($row, [$value['fieldName']]);
             if (count($columnForCompare) < 1) {
                 return false;
@@ -69,7 +64,7 @@ class ProcessQuery implements ProcessQueryInterface
             }
         }
 
-        return $check;
+        return true;
     }
 
     /**
@@ -91,11 +86,22 @@ class ProcessQuery implements ProcessQueryInterface
         }
 
         // Get the value for counting
+        // Not need to check the result,
+        // a exception will be thrown if the key not exist.
+
         $columnValues = $this->getValuesByColumnNames($row, [$fieldForCount]);
-        if (count($columnValues) < 1) {
+
+        $keyForRow = 'count(' . $fieldForCount . ')';
+
+        // TODO add tests for if
+        if (empty($columnValues)) {
             return $row;
         }
-        $keyForRow = 'count(' . $fieldForCount . ')';
+
+        if (!isset(array_values($columnValues)[0])) {
+            return $row;
+        }
+
         $keyForAggregationCount = array_values($columnValues)[0];
 
         // Does the count field exist in the row.

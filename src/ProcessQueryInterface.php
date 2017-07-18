@@ -4,6 +4,8 @@ namespace AParse;
 
 interface ProcessQueryInterface
 {
+    const KEY_PREFIX = 'c';
+
     /**
      * Select specific fields in a row.
      *

@@ -2,7 +2,9 @@
 
 namespace Tests;
 
+use function AParse\dd;
 use AParse\LineString;
+use AParse\ProcessQueryInterface;
 
 /**
  * @coversDefaultClass \AParse\LineString
@@ -18,6 +20,14 @@ class LineStringTest extends BaseTest
         parent::__construct($name, $data, $dataName);
 
         $this->lineString = new LineString();
+    }
+
+    /**
+     * @covers ::parseLineToArray
+     */
+    public function testParseLineToArray()
+    {
+        self::markTestIncomplete('TBD');
     }
 
     /**
@@ -41,6 +51,18 @@ class LineStringTest extends BaseTest
         self::assertEquals(7, count($data));
 
         // Test the key
-        self::assertEquals('200', $data[3]);
+        self::assertEquals('200', $data[ProcessQueryInterface::KEY_PREFIX . '3']);
+    }
+
+    /**
+     * @covers ::cutAccessLogToPieces
+     */
+    public function testCutAccessLogToPieces()
+    {
+        $string = explode(' - - ', $this->apacheAccessLogLine);
+        $string = $string[1];
+        $data = $this->lineString->cutAccessLogToPieces($string);
+        self::assertEquals(6, count($data));
+        self::assertEquals('200', $data[2]);
     }
 }

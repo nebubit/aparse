@@ -8,7 +8,7 @@
 </p>
 
 ## About AParse
-A command line tool for PHP developers to analyze Apache log file. You may ask We already have sed, awk and the others. Why did you still make this tool? The syntax of those tools are too unreadable. A lot of time will be spent on reading the reference to achieve a very simple aim, such as counting the status code. 
+A command line tool for PHP developers to analyze Apache log file. You may ask we already have sed, awk, and the others. Why did you still make this tool? Because the syntax of those tools is too unreadable for who are not familiar with pip commands like system admin. A lot of time will be spent on reading the reference to achieve a very simple aim, such as counting the status code. 
 
 ## Requirements
 * PHP version 5.5 or greater
@@ -18,7 +18,7 @@ A command line tool for PHP developers to analyze Apache log file. You may ask W
 ```shell
 composer global require "nebubit/aparse=*"
 ```
-Make sure you have the composer bin dir in your PATH. The default value is ~/.composer/vendor/bin/, but you can check the value that you need to use by running composer global config bin-dir --absolute. Then appending this path to your shell environment file by running following command and restart your terminal.
+Make sure you have the composer bin dir in your PATH. The default value is ~/.composer/vendor/bin/, but you can check the value that you need to use by running composer global config bin-dir --absolute. Then appending this path to your terminal environment file by running following command. Don't forget to restart your terminal.
 
 **For bash**
 ```shell
@@ -58,3 +58,11 @@ $db->select('c1', 'c2')->count('c3')->where(['c3'=>'400'])->group('c3')->get(3)
 
 The "c" in select fields stands for column.
 
+
+## Contributing
+
+Thank you for considering contributing to the AParse! Please read the following guide lines before you pull request.
+
+1. Follow the PSR-2 coding standard and the PSR-4 autoloading standard.
+2. Document any change in behavior.
+3. Add test cases and check if tests pass.

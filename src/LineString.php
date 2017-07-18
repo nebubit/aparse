@@ -52,7 +52,14 @@ class LineString implements LineStringInterface
 
         $otherStrings = $this->cutAccessLogToPieces($temp[1]);
 
-        return array_merge($parsedLine, $otherStrings);
+        $data = array_merge($parsedLine, $otherStrings);
+
+        $keys = range(0, count($data) - 1);
+        $keys = array_map(function ($v) {
+            return ProcessQueryInterface::KEY_PREFIX . $v;
+        }, $keys);
+
+        return array_combine($keys, $data);
     }
 
     public function cutAccessLogToPieces($string)

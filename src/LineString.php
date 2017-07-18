@@ -50,13 +50,12 @@ class LineString implements LineStringInterface
         }
         $parsedLine[] = $temp[0];
 
-        $otherStrings = $this->cutToPieces($temp[1]);
+        $otherStrings = $this->cutAccessLogToPieces($temp[1]);
 
         return array_merge($parsedLine, $otherStrings);
     }
 
-
-    public function cutToPieces($string)
+    public function cutAccessLogToPieces($string)
     {
         $string = trim($string);
         $result = [];
@@ -81,7 +80,7 @@ class LineString implements LineStringInterface
                 $endPos = strpos($remainedPart, $value[1]);
                 $result[] = substr($string, 1, $endPos);
                 $remainedPart = substr($remainedPart, $endPos + 1);
-                $otherStrings = $this->cutToPieces($remainedPart);
+                $otherStrings = $this->cutAccessLogToPieces($remainedPart);
                 $result = array_merge($result, $otherStrings);
             }
         }
@@ -92,7 +91,7 @@ class LineString implements LineStringInterface
                 if ($endPos !== false) {
                     $firstPart = substr($string, 0, $endPos - 1);
                     $result = explode(' ', $firstPart);
-                    $otherStrings = $this->cutToPieces(substr($string, $endPos));
+                    $otherStrings = $this->cutAccessLogToPieces(substr($string, $endPos));
                     $result = array_merge($result, $otherStrings);
                 }
             }

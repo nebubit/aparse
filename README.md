@@ -1,4 +1,11 @@
-# AParse
+<h1 align="center">AParse</h1>
+
+<p align="center">
+<a href="https://travis-ci.org/nebubit/aparse"><img src="https://travis-ci.org/nebubit/aparse.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/nebubit/aparse"><img src="https://poser.pugx.org/nebubit/aparse/d/total.svg" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/nebubit/aparse"><img src="https://poser.pugx.org/nebubit/aparse/v/stable.svg" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/nebubit/aparse"><img src="https://poser.pugx.org/nebubit/aparse/license.svg" alt="License"></a>
+</p>
 
 ## About AParse
 A command line tool for PHP developers to analyze Apache log file. You may ask We already have sed, awk and the others. Why did you still make this tool? The syntax of those tools are too unreadable. A lot of time will be spent on reading the reference to achieve a very simple aim, such as counting the status code. 

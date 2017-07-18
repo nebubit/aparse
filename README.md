@@ -11,7 +11,7 @@
 A command line tool for PHP developers to analyze Apache log file. You may ask We already have sed, awk and the others. Why did you still make this tool? The syntax of those tools are too unreadable. A lot of time will be spent on reading the reference to achieve a very simple aim, such as counting the status code. 
 
 ## Requirements
-* PHP version 5.4.0 or greater
+* PHP version 5.5 or greater
 
 ## Installation
 

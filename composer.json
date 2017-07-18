@@ -10,7 +10,7 @@
         "apache access log analyzer"
     ],
     "require": {
-        "php": ">=5.4",
+        "php": ">=5.5",
         "psy/psysh": "~0.8"
     },
     "require-dev": {

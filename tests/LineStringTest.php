@@ -2,7 +2,6 @@
 
 namespace Tests;
 
-use function AParse\dd;
 use AParse\LineString;
 use AParse\ProcessQueryInterface;
 

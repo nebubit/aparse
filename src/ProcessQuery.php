@@ -93,12 +93,7 @@ class ProcessQuery implements ProcessQueryInterface
 
         $keyForRow = 'count(' . $fieldForCount . ')';
 
-        // TODO add tests for if
         if (empty($columnValues)) {
-            return $row;
-        }
-
-        if (!isset(array_values($columnValues)[0])) {
             return $row;
         }
 

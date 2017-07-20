@@ -24,9 +24,28 @@ class LineStringTest extends BaseTest
     /**
      * @covers ::parseLineToArray
      */
-    public function testParseLineToArray()
+    public function testParseLineToArrayWithWrongType()
     {
-        self::markTestIncomplete('TBD');
+        $data = $this->lineString->parseLineToArray('not matched line', 'unknownType');
+        self::assertEquals(3, count($data));
+    }
+
+    /**
+     * @covers ::parseLineToArray
+     */
+    public function testParseLineToArrayWithApacheAccessLog()
+    {
+        $data = $this->lineString->parseLineToArray($this->apacheAccessLogLine, 'access');
+        self::assertEquals(7, count($data));
+    }
+
+    /**
+     * @covers ::parseLineToArray
+     */
+    public function testParseLineToArrayWithCsvLog()
+    {
+        $data = $this->lineString->parseLineToArray('a,b,c', 'csv');
+        self::assertEquals(3, count($data));
     }
 
     /**
@@ -63,5 +82,23 @@ class LineStringTest extends BaseTest
         $data = $this->lineString->cutAccessLogToPieces($string);
         self::assertEquals(6, count($data));
         self::assertEquals('200', $data[2]);
+    }
+
+    /**
+     * @covers ::parseAccessLogLineToArray
+     */
+    public function testParseAccessLogLineToArrayWithoutMatchedLine()
+    {
+        $data = $this->lineString->parseAccessLogLineToArray('not matched line');
+        self::assertEmpty($data);
+    }
+
+    /**
+     * @covers ::parseLineByDefaultRule
+     */
+    public function testParseLineByDefaultRule()
+    {
+        $data = $this->lineString->parseLineByDefaultRule('not matched line');
+        self::assertEquals(3, count($data));
     }
 }

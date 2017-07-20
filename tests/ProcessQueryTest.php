@@ -10,11 +10,11 @@ use AParse\ProcessQuery;
 class ProcessQueryTest extends BaseTest
 {
     public $processQuery;
-    public $row = ['c0' => 'value1', 'c1' => 'value2', 'c2' => 'value3', 'c3' => 'value4'];
+    public $row = ['c0' => 'value0', 'c1' => '200', 'c2' => 'value3', 'c3' => 'value4'];
     public $conditions = [
         [
             'fieldName' => 'c1',
-            'fieldValue' => 'value2',
+            'fieldValue' => '300',
             'operator' => '=',
         ]
     ];
@@ -31,9 +31,9 @@ class ProcessQueryTest extends BaseTest
      */
     public function testGetValuesByColumnNames()
     {
-        $columnNames = ['c1', 'c3'];
+        $columnNames = ['c0', 'c3'];
         $expectedResult = [
-            'c1' => 'value2',
+            'c0' => 'value0',
             'c3' => 'value4',
         ];
 
@@ -92,7 +92,18 @@ class ProcessQueryTest extends BaseTest
     /**
      * @covers ::where
      */
-    public function testWhereWithUnmatchedCondition()
+    public function testWhereWithUnmatchedConditionKey()
+    {
+        $conditions = $this->conditions;
+        $conditions[0]['fieldName'] = 'a1';
+        $data = $this->processQuery->where($this->row, $conditions);
+        self::assertFalse($data);
+    }
+
+    /**
+     * @covers ::where
+     */
+    public function testWhereWithUnmatchedConditionValue()
     {
         $conditions = $this->conditions;
         $conditions[0]['fieldValue'] = 'value';
@@ -103,9 +114,34 @@ class ProcessQueryTest extends BaseTest
     /**
      * @covers ::where
      */
+    public function testWhereWithConditionValueGreatThan()
+    {
+        $conditions = $this->conditions;
+        $conditions[0]['fieldValue'] = '400';
+        $conditions[0]['operator'] = '>=';
+        $data = $this->processQuery->where($this->row, $conditions);
+        self::assertFalse($data);
+    }
+
+    /**
+     * @covers ::where
+     */
+    public function testWhereWithConditionValueLessThan()
+    {
+        $conditions = $this->conditions;
+        $conditions[0]['fieldValue'] = '100';
+        $conditions[0]['operator'] = '<=';
+        $data = $this->processQuery->where($this->row, $conditions);
+        self::assertFalse($data);
+    }
+
+    /**
+     * @covers ::where
+     */
     public function testWhereWithMatchedCondition()
     {
         $conditions = $this->conditions;
+        $conditions[0]['fieldValue'] = '200';
         $data = $this->processQuery->where($this->row, $conditions);
         self::assertTrue($data);
     }
@@ -134,5 +170,17 @@ class ProcessQueryTest extends BaseTest
 
         $processQuery->count($this->row, 'c3');
         self::assertEquals(2, $processQuery->aggregationCountNumber[$this->row['c3']]);
+    }
+
+
+    /**
+     * @covers ::count
+     */
+    public function testCountWithUnmatchedField()
+    {
+        $processQuery = new ProcessQuery();
+        $data = $processQuery->count($this->row, 'a1');
+        self::assertTrue(!isset($processQuery->aggregationCountNumber['a1']));
+        self::assertTrue($this->row == $data);
     }
 }

@@ -8,7 +8,7 @@ interface EngineInterface
 
     public function where(array $conditions);
 
-    public function count();
+    public function count($field);
 
     public function get($fields);
 
@@ -22,6 +22,4 @@ interface EngineInterface
      * @return array
      */
     public function getResult();
-
-    public function filter();
 }

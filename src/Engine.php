@@ -223,9 +223,4 @@ class Engine implements EngineInterface
     {
         return $this->result;
     }
-
-    public function filter()
-    {
-        // TODO: Implement filter() method.
-    }
 }

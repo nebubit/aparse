@@ -2,7 +2,6 @@
 
 namespace Tests;
 
-use function AParse\dd;
 use AParse\Engine;
 use AParse\EngineInterface;
 use AParse\FishPool;
@@ -81,6 +80,19 @@ class EngineTest extends BaseTest
         ];
         $this->engine->where($conditions);
         $data = $this->getReflectionProperty($this->engine, 'where');
+        self::assertTrue($expected == $data);
+    }
+
+    /**
+     * @covers ::count
+     */
+    public function testCount()
+    {
+        $field = 'c1';
+        $expected = ['count(c)'];
+        $this->engine->count($field);
+        $data = $this->getReflectionProperty($this->engine, 'selectedFields');
+
         self::assertTrue($expected == $data);
     }
 }

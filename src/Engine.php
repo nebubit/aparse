@@ -6,21 +6,21 @@ use AParse\Exceptions\InvalidArgumentException;
 
 class Engine implements EngineInterface
 {
-    private $fishPool;
-    private $selectedFields;
-    private $where;
-    private $limit;
-    private $fieldForCount;
-    private $fieldForGroupBy;
-    private $process;
-    private $lineString;
-    private $offset;
+    protected $fishPool;
+    protected $selectedFields;
+    protected $where;
+    protected $limit;
+    protected $fieldForCount;
+    protected $fieldForGroupBy;
+    protected $process;
+    protected $lineString;
+    protected $offset;
 
     // The total of valid items that will be returned in result
-    private $currentItemCount;
+    protected $currentItemCount;
 
     // The result of the query
-    private $result;
+    protected $result;
 
     public function __construct($fishPool, ProcessQueryInterface $process, LineString $lineString)
     {
@@ -45,15 +45,18 @@ class Engine implements EngineInterface
         $operator = '=';
         $whereArray = [];
         foreach ($conditions as $value) {
+            $keyName = '';
             foreach ($value as $k => $v) {
-                if (substr($k, -1) == '=') {
-                    $operator = substr($k, -1);
-                } else if (in_array(substr($k, -2), ['>=', '<='])) {
+                if (in_array(substr($k, -2), ['>=', '<='])) {
                     $operator = substr($k, -2);
+                    $keyName = substr($k, 0, -2);
+                } else if (substr($k, -1) == '=') {
+                    $operator = substr($k, -1);
+                    $keyName = substr($k, 0, -1);
                 }
 
                 $whereArray[] = [
-                    'fieldName' => $k,
+                    'fieldName' => $keyName,
                     'fieldValue' => $v,
                     'operator' => $operator,
                 ];

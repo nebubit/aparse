@@ -22,6 +22,13 @@ class Engine implements EngineInterface
     // The result of the query
     protected $result;
 
+    /**
+     * Engine constructor.
+     * @codeCoverageIgnore
+     * @param $fishPool
+     * @param ProcessQueryInterface $process
+     * @param LineString $lineString
+     */
     public function __construct($fishPool, ProcessQueryInterface $process, LineString $lineString)
     {
         $this->fishPool = $fishPool;
@@ -67,6 +74,11 @@ class Engine implements EngineInterface
         return $this;
     }
 
+    /**
+     * @todo if the fields does not an array
+     * @param null $field
+     * @return $this
+     */
     public function count($field = null)
     {
         if (empty($field)) {
@@ -79,35 +91,44 @@ class Engine implements EngineInterface
         return $this;
     }
 
+    /**
+     * The same as group
+     *
+     * @codeCoverageIgnore
+     * @param null $field
+     * @return $this
+     */
     public function groupBy($field = null)
     {
-        if (empty($field)) {
-            return $this;
-        }
-
-        $this->fieldForGroupBy = $field[0];
-        if (!in_array($this->fieldForGroupBy, $this->selectedFields)) {
-            $this->selectedFields[] = $this->fieldForGroupBy;
-        }
-
-        return $this;
+        return $this->group($field);
     }
 
     /**
-     * The same as groupBy
+     *  Group by
      *
      * @param null $field
      * @return Engine
      */
     public function group($field = null)
     {
-        return $this->groupBy($field);
+        if (empty($field)) {
+            return $this;
+        }
+
+        $this->fieldForGroupBy = $field[0];
+        // Force the selectedFields to array if there is no selected fields
+        if (!in_array($this->fieldForGroupBy, (array)$this->selectedFields)) {
+            $this->selectedFields[] = $this->fieldForGroupBy;
+        }
+
+        return $this;
     }
 
     public function get($fields)
     {
         $limit = 1;
         $offset = 0;
+
         if (isset($fields[0])) {
             $limit = $fields[0];
         }
@@ -217,6 +238,7 @@ class Engine implements EngineInterface
     }
 
     /**
+     * @codeCoverageIgnore
      * {@inheritdoc}
      */
     public function getResult()

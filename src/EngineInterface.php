@@ -22,4 +22,6 @@ interface EngineInterface
      * @return array
      */
     public function getResult();
+
+    public function processLine(array $row);
 }

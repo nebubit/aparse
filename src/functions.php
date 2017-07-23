@@ -2,15 +2,6 @@
 
 namespace AParse;
 
-function dd($params)
-{
-    if (!is_array($params) && !is_object($params)) {
-        var_dump($params);
-    }
-    print_r($params);
-    die();
-}
-
 function line($string)
 {
     return $string . "\n";

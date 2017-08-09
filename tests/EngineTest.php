@@ -150,6 +150,9 @@ class EngineTest extends BaseTest
         self::assertEquals(200, $data[0]['c3']);
     }
 
+    /**
+     * @covers ::processLine
+     */
     public function testProcessLine()
     {
         $fileHandle = fopen($this->accessLogPath, 'r');
@@ -174,5 +177,41 @@ class EngineTest extends BaseTest
 
         $selectedFields = $this->getReflectionProperty($this->engine, 'selectedFields');
         self::assertTrue(in_array('count(c1)', array_values($selectedFields)));
+    }
+
+    /**
+     * Must test Count with a matched WHERE, or the result may not right.
+     *
+     * @covers ::processLine
+     */
+    public function testProcessLineCount()
+    {
+        $fileHandle = fopen($this->accessLogPath, 'r');
+        $lineString = fgets($fileHandle);
+        fclose($fileHandle);
+        $row = (new LineString())->parseLineToArray($lineString, 'access');
+
+        $field = ['c1'];
+        $conditions = [
+            ['c3>=' => '301'],
+        ];
+        $this->engine->where($conditions);
+        $this->engine->count($field);
+        $this->engine->processLine($row);
+
+        $selectedFields = $this->getReflectionProperty($this->engine, 'selectedFields');
+        self::assertTrue(in_array('count(c1)', array_values($selectedFields)));
+    }
+
+    /**
+     * @covers ::getLogFileType
+     */
+    public function testGetLogFileType()
+    {
+        $fileType = $this->engine->getLogFileType('test.csv');
+        self::assertEquals('csv', $fileType);
+
+        $fileType = $this->engine->getLogFileType('test.log');
+        self::assertEquals('access', $fileType);
     }
 }
